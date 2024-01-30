@@ -146,6 +146,7 @@ const DisplayContent = {
         Gameboard.gameboard = ["", "", "", "", "", "", "", "", ""];
     }
 }
+DisplayContent.renderGameboard();
 startGameBtn.addEventListener('click', GameFlow.playGame.bind(GameFlow));
 
 
