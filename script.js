@@ -10,18 +10,21 @@ const Gameboard = (function() {
     };
 })();
 
+
 //objects for the players 
 const Players =  {
     playerOne: {
-        name: "Player 1",
+        name: "Player X",
         symbol: "X",
         score: 0
     },
+
     playerTwo: {
-        name: "Player 2",
+        name: "Player O",
         symbol: "O",
         score: 0
     },
+
     addScore(player)   {
         Players[player].score++;
     },
@@ -29,20 +32,18 @@ const Players =  {
 
 //the logic of the game
 const GameFlow = {
-    //display the board 
-    displayGameBoard() {
-        console.log(Gameboard.gameboard);
-    },
-    //alternate the players
+      //alternate the players
     switchPlayer(currPlayer) {
         return currPlayer === "playerOne" ? "playerTwo" : "playerOne";
     },
+
     //get the input from players
     getPlayerInput() {
         const input = prompt("Enter row (1-3) and column (1-3) separated by a space");
         const [row, column] = input.split(' ').map(value => parseInt(value, 10));
         return { row, column };
     },
+
     //function for the players move
     playerMove(player, row, column) {
         //check if the chosen cell is valid
@@ -51,14 +52,17 @@ const GameFlow = {
             if(Gameboard.gameboard[(row - 1) * 3 + (column - 1)] === "") {
                 //update the gameboard
                 Gameboard.gameboard[(row - 1) * 3 + (column - 1)] = player.symbol;
+                DisplayContent.renderGameboard();
             } else {
                 alert("Cell is already occupied. Chose another");
             }
         } else alert("Please enter the value between 1 and 3");
     },
+
     isGameBoardFull() {
         return Gameboard.gameboard.every(cell => cell !== "");
     },
+
     checkWinCondition() {
         //check rows 
         for(let i = 0; i < 3; i++) {
@@ -93,8 +97,10 @@ const GameFlow = {
         }
         return false;
     },
+
     //main game loop
     playGame() { 
+        DisplayContent.resetGameboard();
         currPlayer = "playerOne";
         
         while(!this.isGameBoardFull()) {
@@ -107,7 +113,7 @@ const GameFlow = {
         
         //display winner or switch to the next player
         if(this.checkWinCondition()) {
-            this.displayGameBoard();
+            DisplayContent.renderGameboard();
             console.log(Players[currPlayer].name + " is the winner");
             //break out of the loop if there is a winner
             break;
@@ -116,11 +122,32 @@ const GameFlow = {
             //switch players
             currPlayer = this.switchPlayer(currPlayer);
             }
-        this.displayGameBoard();
-    } 
+        } 
     }    
 }
-GameFlow.playGame();
+
+//variables for DOM manipulation
+const mainContainer = document.querySelector('.gameboard-container');
+const startGameBtn = document.querySelector('.start-game');
+//display/DOM logic
+const DisplayContent = {
+    renderGameboard() {
+        mainContainer.innerHTML = "";
+        for(let i = 0; i < Gameboard.gameboard.length; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.innerHTML = Gameboard.gameboard[i];
+            mainContainer.appendChild(cell);
+        }
+    },
+
+    //clear the board
+    resetGameboard() {
+        Gameboard.gameboard = ["", "", "", "", "", "", "", "", ""];
+    }
+}
+startGameBtn.addEventListener('click', GameFlow.playGame.bind(GameFlow));
+
 
 
 
