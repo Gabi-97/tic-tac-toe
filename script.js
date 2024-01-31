@@ -1,6 +1,6 @@
 //variables for DOM manipulation
 const mainContainer = document.querySelector('.gameboard-container');
-const startGameBtn = document.querySelector('.start-game');
+const resetGameBtn = document.querySelector('.reset-game');
 const winnerPar = document.querySelector('.winner');
 
 
@@ -136,6 +136,12 @@ const DisplayContent = {
                 
             })
         });
+
+        resetGameBtn.addEventListener('click', () => {
+            this.resetGameboard();
+            this.renderGameboard();
+        })
+
     },
     
     //clear the board
