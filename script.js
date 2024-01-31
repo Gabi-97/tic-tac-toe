@@ -2,6 +2,7 @@
 const mainContainer = document.querySelector('.gameboard-container');
 const resetGameBtn = document.querySelector('.reset-game');
 const winnerPar = document.querySelector('.winner');
+const warningPar = document.querySelector('.warning');
 
 
 //storing the gameboard in a module pattern
@@ -50,27 +51,33 @@ const GameFlow = {
                 Gameboard.gameboard[(row - 1) * 3 + (column - 1)] = player.symbol;
                 DisplayContent.renderGameboard();
             } else {
-                alert("Cell is already occupied. Chose another");
+                warningPar.innerHTML = "Cell is already occupied. Chose another!";
+                
             }
-        } else alert("Please enter the value between 1 and 3");
+        } 
     },
 
     //main game loop
     playGame() {                 
         const row = DisplayContent.clickedRowIndex;
         const column = DisplayContent.clickedColumnIndex;
+
+        //clear warning paragraph
+        warningPar.innerHTML = "";
         
         //fill the board based on players input
         if(!this.isGameBoardFull() && !this.checkWinCondition()) {
              this.playerMove(Players[this.currPlayer], row, column);
-             this.currPlayer = this.switchPlayer(this.currPlayer); 
+            //  this.currPlayer = this.switchPlayer(this.currPlayer); 
         }   
         
         //display winner or switch to the next player
-        if(this.checkWinCondition()) {
+        if (this.checkWinCondition()) {
             console.log(Players[this.currPlayer].name + " is the winner");
             DisplayContent.declareWinner(this.currPlayer);
-        } 
+        } else if (!this.isGameBoardFull()) {
+            this.currPlayer = this.switchPlayer(this.currPlayer);
+        }
     },
     
     isGameBoardFull() {
@@ -147,6 +154,7 @@ const DisplayContent = {
     //clear the board
     resetGameboard() {
         Gameboard.gameboard = ["", "", "", "", "", "", "", "", ""];
+        winnerPar.textContent = "";
     },
 
     declareWinner(currPlayer) {
