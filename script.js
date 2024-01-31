@@ -1,6 +1,7 @@
-//store the gameboard as an array inside of an object
-//players will be in an object 
-//probably going to want as an object to control the flow of the game
+//variables for DOM manipulation
+const mainContainer = document.querySelector('.gameboard-container');
+const startGameBtn = document.querySelector('.start-game');
+
 
 //storing the gameboard in a module pattern
 const Gameboard = (function() {
@@ -32,16 +33,10 @@ const Players =  {
 
 //the logic of the game
 const GameFlow = {
+    currPlayer: "playerOne",
       //alternate the players
     switchPlayer(currPlayer) {
         return currPlayer === "playerOne" ? "playerTwo" : "playerOne";
-    },
-
-    //get the input from players
-    getPlayerInput() {
-        const input = prompt("Enter row (1-3) and column (1-3) separated by a space");
-        const [row, column] = input.split(' ').map(value => parseInt(value, 10));
-        return { row, column };
     },
 
     //function for the players move
@@ -59,6 +54,25 @@ const GameFlow = {
         } else alert("Please enter the value between 1 and 3");
     },
 
+    //main game loop
+    playGame() {                 
+        const row = DisplayContent.clickedRowIndex;
+        const column = DisplayContent.clickedColumnIndex;
+        
+        //fill the board based on players input
+        if(!this.isGameBoardFull() && !this.checkWinCondition()) {
+             this.playerMove(Players[this.currPlayer], row, column);
+             this.currPlayer = this.switchPlayer(this.currPlayer); 
+        }   
+        
+        //display winner or switch to the next player
+        if(this.checkWinCondition()) {
+            DisplayContent.renderGameboard();
+            console.log(Players[this.currPlayer].name + " is the winner");
+            //break out of the loop if there is a winner
+        } 
+    },
+    
     isGameBoardFull() {
         return Gameboard.gameboard.every(cell => cell !== "");
     },
@@ -96,58 +110,42 @@ const GameFlow = {
             return true;
         }
         return false;
-    },
-
-    //main game loop
-    playGame() { 
-        DisplayContent.resetGameboard();
-        currPlayer = "playerOne";
-        
-        while(!this.isGameBoardFull()) {
-        
-        //get the input from the current player
-        const userInput = this.getPlayerInput();
-
-        //fill the board based on players input
-        this.playerMove(Players[currPlayer], userInput.row, userInput.column);
-        
-        //display winner or switch to the next player
-        if(this.checkWinCondition()) {
-            DisplayContent.renderGameboard();
-            console.log(Players[currPlayer].name + " is the winner");
-            //break out of the loop if there is a winner
-            break;
-        }
-        else {
-            //switch players
-            currPlayer = this.switchPlayer(currPlayer);
-            }
-        } 
-    }    
+    }
 }
 
-//variables for DOM manipulation
-const mainContainer = document.querySelector('.gameboard-container');
-const startGameBtn = document.querySelector('.start-game');
 //display/DOM logic
 const DisplayContent = {
+    clickedRowIndex: null,
+    clickedColumnIndex: null,
     renderGameboard() {
         mainContainer.innerHTML = "";
         for(let i = 0; i < Gameboard.gameboard.length; i++) {
             const cell = document.createElement('div');
             cell.classList.add('cell');
             cell.innerHTML = Gameboard.gameboard[i];
+            cell.dataset.index = i;
             mainContainer.appendChild(cell);
-        }
+        }  
+        const cells = document.querySelectorAll('.cell');
+        cells.forEach(cell => {
+            cell.addEventListener('click', () => {
+                this.clickedRowIndex = Math.floor(cell.dataset.index / 3) + 1;
+                this.clickedColumnIndex = (cell.dataset.index % 3 ) + 1;
+                console.log('hi');
+                GameFlow.playGame();
+                
+            })
+        });
     },
-
+    
     //clear the board
     resetGameboard() {
         Gameboard.gameboard = ["", "", "", "", "", "", "", "", ""];
     }
 }
 DisplayContent.renderGameboard();
-startGameBtn.addEventListener('click', GameFlow.playGame.bind(GameFlow));
+
+
 
 
 
