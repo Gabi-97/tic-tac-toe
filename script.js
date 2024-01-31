@@ -1,8 +1,8 @@
 //variables for DOM manipulation
 const mainContainer = document.querySelector('.gameboard-container');
 const resetGameBtn = document.querySelector('.reset-game');
-const winnerPar = document.querySelector('.winner');
-const warningPar = document.querySelector('.warning');
+const messagePara = document.querySelector('.message');
+const turnPara = document.querySelector('.turn');
 
 
 //storing the gameboard in a module pattern
@@ -51,8 +51,8 @@ const GameFlow = {
                 Gameboard.gameboard[(row - 1) * 3 + (column - 1)] = player.symbol;
                 DisplayContent.renderGameboard();
             } else {
-                warningPar.innerHTML = "Cell is already occupied. Chose another!";
-                
+                DisplayContent.warningMessage();
+                this.currPlayer = this.switchPlayer(this.currPlayer);                
             }
         } 
     },
@@ -63,17 +63,16 @@ const GameFlow = {
         const column = DisplayContent.clickedColumnIndex;
 
         //clear warning paragraph
-        warningPar.innerHTML = "";
+        messagePara.innerHTML = "";
         
         //fill the board based on players input
         if(!this.isGameBoardFull() && !this.checkWinCondition()) {
              this.playerMove(Players[this.currPlayer], row, column);
-            //  this.currPlayer = this.switchPlayer(this.currPlayer); 
         }   
         
         //display winner or switch to the next player
         if (this.checkWinCondition()) {
-            console.log(Players[this.currPlayer].name + " is the winner");
+            console.log(Players[this.currPlayer].name + " is the winner!");
             DisplayContent.declareWinner(this.currPlayer);
         } else if (!this.isGameBoardFull()) {
             this.currPlayer = this.switchPlayer(this.currPlayer);
@@ -149,17 +148,28 @@ const DisplayContent = {
             this.renderGameboard();
         })
 
+        turnPara.innerHTML = Players[GameFlow.currPlayer].name + "'s turn";
+
     },
     
     //clear the board
     resetGameboard() {
         Gameboard.gameboard = ["", "", "", "", "", "", "", "", ""];
-        winnerPar.textContent = "";
+        messagePara.textContent = "";
+    },
+
+    warningMessage() {
+        messagePara.innerHTML = "Cell is already occupied. Chose another!";
+        messagePara.classList.add('warning');
     },
 
     declareWinner(currPlayer) {
-        winnerPar.textContent = Players[currPlayer].name + " is the winner";
+        messagePara.textContent = Players[currPlayer].name + " is the winner";
+        messagePara.classList.remove('warning');
+        messagePara.classList.add('winner');
     }
+
+    
 }
 DisplayContent.renderGameboard();
 
