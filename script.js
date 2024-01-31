@@ -1,6 +1,7 @@
 //variables for DOM manipulation
 const mainContainer = document.querySelector('.gameboard-container');
 const startGameBtn = document.querySelector('.start-game');
+const winnerPar = document.querySelector('.winner');
 
 
 //storing the gameboard in a module pattern
@@ -67,9 +68,8 @@ const GameFlow = {
         
         //display winner or switch to the next player
         if(this.checkWinCondition()) {
-            DisplayContent.renderGameboard();
             console.log(Players[this.currPlayer].name + " is the winner");
-            //break out of the loop if there is a winner
+            DisplayContent.declareWinner(this.currPlayer);
         } 
     },
     
@@ -141,6 +141,10 @@ const DisplayContent = {
     //clear the board
     resetGameboard() {
         Gameboard.gameboard = ["", "", "", "", "", "", "", "", ""];
+    },
+
+    declareWinner(currPlayer) {
+        winnerPar.textContent = Players[currPlayer].name + " is the winner";
     }
 }
 DisplayContent.renderGameboard();
