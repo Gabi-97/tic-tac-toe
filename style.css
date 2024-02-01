@@ -1,17 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+
+:root {
+    --background-color: #1D2B53;
+    --main-color: #FF004D;
+    --negative-message: #FAEF5D;
+    --positive-message: #16FF00;
+    --font-family: 'Press Start 2P', system-ui;
+}
+
 h1 {
-    font-style: italic;
-    color: pink;
+    font-family: var(--font-family);
+    color: var(--main-color);
     text-align: center;
+    margin-bottom: 50px;
 }
 body {
     display: flex;
     flex-direction: column;
+    background-color: var(--background-color);
 }
 
 .main-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 20px;
 }
 .gameboard-container {
     max-width: 300px;
@@ -22,34 +36,45 @@ body {
     display: flex;
     flex-wrap: wrap;
 
-    border: 2px green solid;
+    border: 3px var(--main-color) dotted;
 }
 
 .cell {
     box-sizing: border-box;
-    border: 1px solid black;
+    border: 3px var(--main-color) dotted;
     width: 100px;
     height: 100px;
 
     display:flex;
     justify-content: center;
     align-items: center;
+
+    font-family: var(--font-family);
+    color:var(--main-color);
 }
 
 .reset-game {
-    width: 100px;
-    height: 50px;
-    margin: 10px;
+    width: 200px;
+    height: 75px;
+    /* margin: 10px; */
+
+    border: 4px dotted var(--main-color);
+    background-color: var(--background-color);
+    font-family: var(--font-family);
+    color: var(--main-color);
+
 }
 
 .message, .turn {
     height: 20px;
+    font-family: var(--font-family);
+    color: var(--main-color);
 }
 .winner {
-    font-size: 1.2em;
-    color: green;
+    color: var(--positive-message);
+    font-family: var(--font-family);
 }
 .warning {
-    font-size: 1.2em;
-    color: red;
+    color: var(--negative-message);
+    font-family: var(--font-family);
 }
