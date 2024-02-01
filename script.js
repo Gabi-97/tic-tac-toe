@@ -39,6 +39,7 @@ const GameFlow = {
       //alternate the players
     switchPlayer(currPlayer) {
         return currPlayer === "playerOne" ? "playerTwo" : "playerOne";
+        
     },
 
     //function for the players move
@@ -52,7 +53,8 @@ const GameFlow = {
                 DisplayContent.renderGameboard();
             } else {
                 DisplayContent.warningMessage();
-                this.currPlayer = this.switchPlayer(this.currPlayer);                
+                this.currPlayer = this.switchPlayer(this.currPlayer);
+                                
             }
         } 
     },
@@ -139,7 +141,7 @@ const DisplayContent = {
                 this.clickedColumnIndex = (cell.dataset.index % 3 ) + 1;
                 console.log('hi');
                 GameFlow.playGame();
-                
+                this.showPlayerTurn();
             })
         });
 
@@ -147,12 +149,8 @@ const DisplayContent = {
             this.resetGameboard();
             this.renderGameboard();
         })
-
-        turnPara.innerHTML = Players[GameFlow.currPlayer].name + "'s turn";
-
     },
-    
-    //clear the board
+
     resetGameboard() {
         Gameboard.gameboard = ["", "", "", "", "", "", "", "", ""];
         messagePara.textContent = "";
@@ -167,10 +165,13 @@ const DisplayContent = {
         messagePara.textContent = Players[currPlayer].name + " is the winner";
         messagePara.classList.remove('warning');
         messagePara.classList.add('winner');
-    }
+    },
 
-    
+    showPlayerTurn() {
+        turnPara.innerHTML = Players[GameFlow.currPlayer].name + "'s turn";
+    }    
 }
+DisplayContent.showPlayerTurn();
 DisplayContent.renderGameboard();
 
 
