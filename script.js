@@ -162,7 +162,7 @@ const DisplayContent = {
     },
 
     declareWinner(currPlayer) {
-        messagePara.textContent = Players[currPlayer].name + " is the winner";
+        messagePara.textContent = Players[currPlayer].name + " is the winner!";
         messagePara.classList.remove('warning');
         messagePara.classList.add('winner');
     },
